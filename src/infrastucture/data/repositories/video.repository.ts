@@ -3,39 +3,25 @@ import { IVideoRepository } from 'src/domain/repositories/video/video-repository
 import { IDynamoDbRepository } from './dynamodb-repository.interface';
 import { UploadVideo } from 'src/domain/entities/video/upload-video.entity';
 import { Video } from 'src/domain/entities/video/video.entity';
-import { DynamoDB, S3, SQS } from 'aws-sdk';
+import { DynamoDB, SQS } from 'aws-sdk';
 import { Item } from 'aws-sdk/clients/simpledb';
 import { VideoModel } from '../models/video.interface';
+import { IS3Repository } from './s3-repository.interface';
 
 export class VideoRepository implements IVideoRepository {
-  private s3 = new S3();
   private sqs = new SQS();
   constructor(
     @Inject(IDynamoDbRepository)
     private readonly db: IDynamoDbRepository,
+    @Inject(IS3Repository)
+    private readonly s3: IS3Repository,
   ) {}
-  async uploadOnS3(uploadVideoBucket: UploadVideo) {
-    await this.s3
-      .upload({
-        Bucket: uploadVideoBucket.bucket,
-        Key: uploadVideoBucket.key,
-        Body: uploadVideoBucket.video.buffer,
-        ContentType: uploadVideoBucket.video.mimetype,
-      })
-      .promise();
+  async uploadOnS3(uploadVideo: UploadVideo) {
+    await this.s3.uploadFile(uploadVideo.video, uploadVideo.path).promise();
   }
-  async downloadFromS3(bucket: string, key: string): Promise<Buffer> {
-    const params = {
-      Bucket: bucket,
-      Key: key,
-    };
-
+  async downloadFromS3(key: string): Promise<Buffer> {
     try {
-      const response = await this.s3.getObject(params).promise();
-      if (!response.Body) {
-        throw new Error('File content is empty');
-      }
-      return response.Body as Buffer;
+      return await this.s3.downloadFile(key);
     } catch (error) {
       console.error('Error downloading file from S3:', error);
       throw new Error('Failed to download file. Please try again.');

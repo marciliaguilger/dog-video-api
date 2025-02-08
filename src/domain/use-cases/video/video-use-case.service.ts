@@ -19,11 +19,10 @@ export class VideoUseCase implements IVideoUseCase {
 
   async processVideo(userId: string, video: Express.Multer.File) {
     const videoId = randomUUID();
-    const videoPath = `videos/${videoId}/${video.originalname}`;
+    const videoPath = `videos/${videoId}`;
 
     const uploadData: UploadVideo = {
-      bucket: 'your-bucket-name',
-      key: videoPath,
+      path: videoPath,
       video,
     };
 
@@ -108,7 +107,6 @@ export class VideoUseCase implements IVideoUseCase {
   }
 
   async downloadVideo(videoId: string) {
-    const bucketName = 'your-bucket-name';
     let video;
 
     try {
@@ -128,7 +126,6 @@ export class VideoUseCase implements IVideoUseCase {
       }
 
       const fileContent = await this.videoRepository.downloadFromS3(
-        bucketName,
         video.slicedVideoPathToBucket,
       );
       console.log('File downloaded successfully.');

@@ -26,18 +26,18 @@ export class VideoController {
     private readonly videoUseCase: IVideoUseCase,
   ) {}
 
-  @Post()
+  @Post('upload')
   @HttpCode(HttpStatus.OK)
-  @UseInterceptors(FileInterceptor('video'))
+  @UseInterceptors(FileInterceptor('file'))
   async uploadVideo(
-    @Body('user_id') userId: string,
-    @UploadedFile() video: Express.Multer.File,
+    @Body('userId') userId: string,
+    @UploadedFile() file: Express.Multer.File,
   ) {
-    if (!userId || !video) {
+    if (!userId || !file) {
       throw new Error('user_id and video file are required.');
     }
 
-    const result = await this.videoUseCase.processVideo(userId, video);
+    const result = await this.videoUseCase.processVideo(userId, file);
     return { message: 'Video uploaded successfully', videoId: result.videoId };
   }
 
