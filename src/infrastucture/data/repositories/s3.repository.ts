@@ -1,8 +1,5 @@
-import AWS from 'aws-sdk';
-import * as dotenv from 'dotenv';
+import * as AWS from 'aws-sdk';
 import { IS3Repository } from './s3-repository.interface';
-
-dotenv.config();
 
 export class S3Repository implements IS3Repository {
   private readonly AWS_S3_BUCKET = process.env.AWS_S3_BUCKET || '';

@@ -8,6 +8,8 @@ import { DynamoDbRepository } from 'src/infrastucture/data/repositories/dynamodb
 import { IDynamoDbRepository } from 'src/infrastucture/data/repositories/dynamodb-repository.interface';
 import { UserRepository } from 'src/infrastucture/data/repositories/user.repository';
 import { IUserRepository } from 'src/domain/repositories/user/user-repository.interface';
+import { S3Repository } from 'src/infrastucture/data/repositories/s3.repository';
+import { IS3Repository } from 'src/infrastucture/data/repositories/s3-repository.interface';
 
 @Module({
   imports: [],
@@ -33,6 +35,11 @@ import { IUserRepository } from 'src/domain/repositories/user/user-repository.in
       provide: IDynamoDbRepository,
       useFactory: () => new DynamoDbRepository('videos'),
       useClass: DynamoDbRepository,
+    },
+    S3Repository,
+    {
+      provide: IS3Repository,
+      useClass: S3Repository,
     },
   ],
 })
