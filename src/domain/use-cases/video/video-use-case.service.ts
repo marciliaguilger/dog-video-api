@@ -4,12 +4,17 @@ import { randomUUID } from 'crypto';
 import { IVideoRepository } from 'src/domain/repositories/video/video-repository.interface';
 import { UploadVideo } from 'src/domain/entities/video/upload-video.entity';
 import { Video } from 'src/domain/entities/video/video.entity';
+import { IUserRepository } from 'src/domain/repositories/user/user-repository.interface';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class VideoUseCase implements IVideoUseCase {
   constructor(
     @Inject(IVideoRepository)
     private readonly videoRepository: IVideoRepository,
+    @Inject(IUserRepository)
+    private readonly userRepository: IUserRepository,
+    private readonly mailService: MailerService,
   ) {}
 
   async processVideo(userId: string, video: Express.Multer.File) {
@@ -58,13 +63,47 @@ export class VideoUseCase implements IVideoUseCase {
     return { videoId, videoPath };
   }
 
+  async getVideosByUser(userId: string) {
+    try {
+      const videos = await this.videoRepository.findVideosByUserId(userId);
+      return videos;
+    } catch (error) {
+      console.error('Error fetching videos:', error);
+      throw new Error('Failed to retrieve user videos.');
+    }
+  }
+
   async updateStatus(videoId: string, status: string, path?: string) {
     try {
       this.videoRepository.updateStatus(videoId, status, path);
+
+      if (status === 'ERROR') {
+        const video = await this.videoRepository.findVideoById(videoId);
+        if (!video) {
+          throw new Error(`Video with ID ${videoId} not found.`);
+        }
+
+        const user = await this.userRepository.findById(video.userId);
+        if (!user) {
+          throw new Error(`User with ID ${video.userId} not found.`);
+        }
+
+        const emailContent = `<p>Video with the ID <strong>${videoId}</strong> encountered an error.</p>`;
+
+        await this.mailService.sendMail({
+          to: user.email,
+          subject: 'Video Processing Error',
+          html: emailContent,
+        });
+
+        console.log(`Error email sent to ${user.email}`);
+      }
+
       console.log('Updated successfully.');
       return videoId;
     } catch (error) {
-      console.error(error.message);
+      console.error('Error updating status or sending email:', error.message);
+      throw error;
     }
   }
 

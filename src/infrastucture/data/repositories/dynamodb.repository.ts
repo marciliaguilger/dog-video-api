@@ -4,6 +4,7 @@ import { PutItemInputAttributeMap } from 'aws-sdk/clients/dynamodb';
 import {
   AttributeValue,
   DynamoDBClient,
+  QueryCommand,
   ScanCommand,
 } from '@aws-sdk/client-dynamodb';
 import {
@@ -13,6 +14,7 @@ import {
   UpdateCommand,
 } from '@aws-sdk/lib-dynamodb';
 import { UserModel } from '../models/user-item.interface';
+import { VideoModel } from '../models/video.interface';
 
 export class DynamoDbRepository implements IDynamoDbRepository {
   private readonly tableName: string;
@@ -87,6 +89,22 @@ export class DynamoDbRepository implements IDynamoDbRepository {
     }
   }
 
+  async findVideosByUserId(userId: string): Promise<VideoModel[]> {
+    const params = {
+      TableName: this.tableName,
+      KeyConditionExpression: 'userId = :userId',
+      ExpressionAttributeValues: { ':userId': { S: userId } },
+    };
+
+    try {
+      const result = await this.dynamoDb.send(new QueryCommand(params));
+      return result.Items ? result.Items.map(convertToVideoItem) : [];
+    } catch (error) {
+      console.error('Error fetching videos for user:', error);
+      throw error;
+    }
+  }
+
   async update(id: string, updates: { [key: string]: any }): Promise<void> {
     const expressionAttributes: { [key: string]: any } = {};
     const updateExpressions: string[] = [];
@@ -119,5 +137,17 @@ function convertToUserItem(record: Record<string, AttributeValue>): UserModel {
     id: record.id.S!,
     email: record.email.S!,
     password: record.password.S!,
+  };
+}
+
+function convertToVideoItem(
+  record: Record<string, AttributeValue>,
+): VideoModel {
+  return {
+    id: record.id.S!,
+    userId: record.userId.S!,
+    status: record.status.S!,
+    videoPathToBucket: record.videoPathToBucket.S!,
+    slicedVideoPathToBucket: record.slicedVideoPathToBucket.S!,
   };
 }
