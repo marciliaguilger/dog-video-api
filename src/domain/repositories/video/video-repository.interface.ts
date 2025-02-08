@@ -9,6 +9,7 @@ export interface IVideoRepository {
   publishEvent(queueUrl: string, message: string);
   updateStatus(id: string, status: string, path?: string);
   findVideoById(videoId: string): Promise<VideoModel>;
+  findVideosByUserId(userId: string): Promise<VideoModel[]>;
 }
 
 export const IVideoRepository = Symbol('IVideoRepository');

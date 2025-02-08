@@ -42,7 +42,7 @@ export class VideoRepository implements IVideoRepository {
     }
   }
   createVideo(video: Video) {
-    const item = convertVideoEntityToDynamoItem(video);
+    const item = this.convertVideoEntityToDynamoItem(video);
     try {
       this.db.create(item);
     } catch (error) {
@@ -72,40 +72,34 @@ export class VideoRepository implements IVideoRepository {
       .promise();
   }
 
-  async createUser(video: Video) {
-    const item = convertVideoEntityToDynamoItem(video);
-    try {
-      this.db.create(item);
-    } catch (error) {
-      console.error('Error saving user:', error);
-      throw error;
-    }
-  }
-
   async findVideoById(videoId: string): Promise<VideoModel> {
     const item = await this.db.read(videoId);
-    return convertDynamoItemToModel(item);
+    return this.convertDynamoItemToModel(item);
   }
+
+  async findVideosByUserId(userId: string): Promise<VideoModel[]> {
+    return await this.db.findVideosByUserId(userId);
+  }
+
+  convertVideoEntityToDynamoItem = (
+    video: Video,
+  ): DynamoDB.DocumentClient.PutItemInputAttributeMap => {
+    return {
+      id: video.id,
+      userId: video.userId,
+      status: video.status,
+      videoPathToBucket: video.videoPathToBucket,
+      slicedVideoPathToBucket: video.slicedVideoPathToBucket,
+    };
+  };
+
+  convertDynamoItemToModel = (dynamoItem: Item): VideoModel => {
+    return {
+      id: dynamoItem.Attributes['id'],
+      userId: dynamoItem.Attributes['userId'],
+      status: dynamoItem.Attributes['status'],
+      videoPathToBucket: dynamoItem.Attributes['videoPathToBucket'],
+      slicedVideoPathToBucket: dynamoItem.Attributes['slicedVideoPathToBucket'],
+    };
+  };
 }
-
-const convertVideoEntityToDynamoItem = (
-  video: Video,
-): DynamoDB.DocumentClient.PutItemInputAttributeMap => {
-  return {
-    id: video.id,
-    userId: video.userId,
-    status: video.status,
-    videoPathToBucket: video.videoPathToBucket,
-    slicedVideoPathToBucket: video.slicedVideoPathToBucket,
-  };
-};
-
-const convertDynamoItemToModel = (dynamoItem: Item): VideoModel => {
-  return {
-    id: dynamoItem.Attributes['id'],
-    userId: dynamoItem.Attributes['userId'],
-    status: dynamoItem.Attributes['status'],
-    videoPathToBucket: dynamoItem.Attributes['videoPathToBucket'],
-    slicedVideoPathToBucket: dynamoItem.Attributes['slicedVideoPathToBucket'],
-  };
-};

@@ -70,4 +70,18 @@ export class VideoController {
     const stream = Readable.from(fileContent);
     return new StreamableFile(stream);
   }
+
+  @Get('user/:userId')
+  @HttpCode(HttpStatus.OK)
+  async getVideosByUser(@Param('userId') userId: string) {
+    if (!userId) {
+      throw new Error('userId is required.');
+    }
+
+    const videos = await this.videoUseCase.getVideosByUser(userId);
+    return videos.map((video) => ({
+      videoId: video.id,
+      status: video.status,
+    }));
+  }
 }

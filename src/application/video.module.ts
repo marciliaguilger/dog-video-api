@@ -6,6 +6,8 @@ import { VideoRepository } from 'src/infrastucture/data/repositories/video.repos
 import { IVideoRepository } from 'src/domain/repositories/video/video-repository.interface';
 import { DynamoDbRepository } from 'src/infrastucture/data/repositories/dynamodb.repository';
 import { IDynamoDbRepository } from 'src/infrastucture/data/repositories/dynamodb-repository.interface';
+import { UserRepository } from 'src/infrastucture/data/repositories/user.repository';
+import { IUserRepository } from 'src/domain/repositories/user/user-repository.interface';
 
 @Module({
   imports: [],
@@ -20,6 +22,11 @@ import { IDynamoDbRepository } from 'src/infrastucture/data/repositories/dynamod
     {
       provide: IVideoRepository,
       useClass: VideoRepository,
+    },
+    UserRepository,
+    {
+      provide: IUserRepository,
+      useClass: UserRepository,
     },
     DynamoDbRepository,
     {

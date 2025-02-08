@@ -26,6 +26,11 @@ export class UserRepository implements IUserRepository {
     const item = await this.db.findByEmail(email);
     return convertDynamoItemToModel(item);
   }
+
+  async findById(id: string): Promise<UserModel> {
+    const item = await this.db.read(id);
+    return convertDynamoItemToModel(item);
+  }
 }
 
 const convertUserEntityToDynamoItem = (
