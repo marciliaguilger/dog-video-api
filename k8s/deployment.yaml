@@ -13,10 +13,10 @@ spec:
         app: dog-video-api
     spec:
       hostname: dog-video-api
-      serviceAccountName: dog-video-account
+      serviceAccountName: dog-service-account
       containers:
       - name: dog-video-api
-        image: 764549915701.dkr.ecr.us-east-1.amazonaws.com/dog-video-api:latest
+        image: <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/dog-video-api:latest
         resources:
           requests:
             cpu: 100m
