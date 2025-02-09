@@ -27,9 +27,21 @@ spec:
         ports:
         - containerPort: 3000
         env:
-        - name: DOG_VIDEO_API
-          value: 'http://dog-video-api.default.svc.cluster.local:80'
+        - name: QUEUE_URL
+          value: 'secret'
         - name: AWS_REGION
           value: "us-east-1"   
-        - name: VIDEO_QUEUE
+        - name: QUEUE_NAME
           value: "video-queue"
+        - name: EMAIL_HOST
+          value: "sandbox.smtp.mailtrap.io"
+        - name: EMAIL_USERNAME
+          value: "secret"                  
+        - name: EMAIL_PORT
+          value: "2525"               
+        - name: EMAIL_FROM
+          value: "No Reply <no-reply@dogvideo.com>"               
+        - name: EMAIL_PASSWORD
+          value: "secret"               
+        - name: AWS_S3_BUCKET
+          value: "dogapplicationfiles"
