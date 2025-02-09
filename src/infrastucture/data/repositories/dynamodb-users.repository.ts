@@ -17,7 +17,7 @@ import { UserModel } from '../models/user-item.interface';
 import { VideoModel } from '../models/video.interface';
 
 export class DynamoDbUsersRepository implements IDynamoDbUsersRepository {
-  private readonly tableName: 'users';
+  private readonly tableName = 'users';
   private readonly dynamoDb: DynamoDBDocumentClient;
 
   constructor() {

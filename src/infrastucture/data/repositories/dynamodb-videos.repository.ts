@@ -17,7 +17,7 @@ import { VideoModel } from '../models/video.interface';
 import { IDynamoDbVideosRepository } from './dynamodb-videos-repository.interface';
 
 export class DynamoDbVideosRepository implements IDynamoDbVideosRepository {
-  private readonly tableName: 'videos';
+  private readonly tableName = 'videos';
   private readonly dynamoDb: DynamoDBDocumentClient;
 
   constructor() {
