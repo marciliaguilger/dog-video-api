@@ -70,7 +70,7 @@ jobs:
       if: success()
       run: |
         sed -i 's/<AWS_ACCOUNT_ID>/${{ secrets.AWS_ACCOUNT_ID }}/g' ./k8s/deployment.yaml
-        sed -i 's/<QUEUE_URL>/${{ secrets.AWS_ACCOUNT_ID }}/g' ./k8s/deployment.yaml
+        sed -i 's/<QUEUE_URL>/${{ secrets.QUEUE_URL }}/g' ./k8s/deployment.yaml
         sed -i 's/<EMAIL_USERNAME>/${{ secrets.EMAIL_USERNAME }}/g' ./k8s/deployment.yaml
         sed -i 's/<EMAIL_PASSWORD>/${{ secrets.EMAIL_PASSWORD }}/g' ./k8s/deployment.yaml
 
