@@ -26,7 +26,7 @@ export class UserController {
     };
   }
 
-  @Get()
+  @Post()
   async validateUser(@Body() userInput: UserInput) {
     console.log('Validando usuário');
 
