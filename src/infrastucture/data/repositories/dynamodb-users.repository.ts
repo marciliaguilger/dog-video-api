@@ -79,6 +79,8 @@ export class DynamoDbUsersRepository implements IDynamoDbUsersRepository {
 
     try {
       const result = await this.dynamoDb.send(new ScanCommand(params));
+      console.log('resultado da busca por cpf')
+      console.log(result)
       if (result.Items && result.Items.length > 0) {
         return convertToUserItem(result.Items[0]);
       }
