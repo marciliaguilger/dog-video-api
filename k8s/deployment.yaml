@@ -28,7 +28,7 @@ spec:
         - containerPort: 3000
         env:
         - name: QUEUE_URL
-          value: 'secret'
+          value: '<QUEUE_URL>'
         - name: AWS_REGION
           value: "us-east-1"   
         - name: QUEUE_NAME
@@ -36,12 +36,12 @@ spec:
         - name: EMAIL_HOST
           value: "sandbox.smtp.mailtrap.io"
         - name: EMAIL_USERNAME
-          value: "secret"                  
+          value: '<EMAIL_USERNAME>'
         - name: EMAIL_PORT
           value: "2525"               
         - name: EMAIL_FROM
           value: "No Reply <no-reply@dogvideo.com>"               
         - name: EMAIL_PASSWORD
-          value: "secret"               
+          value: '<EMAIL_PASSWORD>'
         - name: AWS_S3_BUCKET
           value: "dogapplicationfiles"
