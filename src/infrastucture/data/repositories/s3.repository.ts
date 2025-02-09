@@ -51,7 +51,6 @@ export class S3Repository implements IS3Repository {
       Bucket: bucket,
       Key: key,
       Body: file,
-      ACL: 'public-read',
       ContentType: mimetype,
       ContentDisposition: 'inline',
     };
