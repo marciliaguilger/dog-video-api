@@ -19,7 +19,7 @@ export class VideoRepository implements IVideoRepository {
     private readonly sqs: IMessageProducerRepository,
   ) {}
   async uploadOnS3(uploadVideo: UploadVideo) {
-    await this.s3.uploadFile(uploadVideo.video, uploadVideo.path).promise();
+    await this.s3.uploadFile(uploadVideo.video, uploadVideo.path);
   }
   async downloadFromS3(key: string): Promise<Buffer> {
     try {
