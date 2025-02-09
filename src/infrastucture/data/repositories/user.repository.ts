@@ -24,6 +24,8 @@ export class UserRepository implements IUserRepository {
 
   async findByEmail(email: string): Promise<UserModel> {
     const item = await this.db.findByEmail(email);
+    console.log('ITEM')
+    console.log(item)
     return convertDynamoItemToModel(item);
   }
 
