@@ -18,8 +18,11 @@ export class UserUseCase implements IUserUseCase {
 
   async getUser(user: Login) {
     const userValidated = await this.userRepository.findByEmail(user.email);
+    console.log('userValidated: ', userValidated);
+    console.log('user.password: ', user.password);
+
     if (userValidated != null && userValidated.password == user.password) {
-      return userValidated.id;
+      return userValidated.userId;
     }
     return null;
   }
