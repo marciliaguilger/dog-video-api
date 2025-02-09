@@ -3,18 +3,20 @@ import { IVideoRepository } from 'src/domain/repositories/video/video-repository
 import { IDynamoDbRepository } from './dynamodb-repository.interface';
 import { UploadVideo } from 'src/domain/entities/video/upload-video.entity';
 import { Video } from 'src/domain/entities/video/video.entity';
-import { DynamoDB, SQS } from 'aws-sdk';
+import { DynamoDB } from 'aws-sdk';
 import { Item } from 'aws-sdk/clients/simpledb';
 import { VideoModel } from '../models/video.interface';
 import { IS3Repository } from './s3-repository.interface';
+import { IMessageProducerRepository } from './sqs.repository.interface';
 
 export class VideoRepository implements IVideoRepository {
-  private sqs = new SQS();
   constructor(
     @Inject(IDynamoDbRepository)
     private readonly db: IDynamoDbRepository,
     @Inject(IS3Repository)
     private readonly s3: IS3Repository,
+    @Inject(IMessageProducerRepository)
+    private readonly sqs: IMessageProducerRepository,
   ) {}
   async uploadOnS3(uploadVideo: UploadVideo) {
     await this.s3.uploadFile(uploadVideo.video, uploadVideo.path).promise();
@@ -49,13 +51,8 @@ export class VideoRepository implements IVideoRepository {
       throw error;
     }
   }
-  async publishEvent(queueUrl: string, message: string) {
-    await this.sqs
-      .sendMessage({
-        QueueUrl: queueUrl,
-        MessageBody: message,
-      })
-      .promise();
+  async publishEvent(message: string) {
+    await this.sqs.sendMessage(message).promise();
   }
 
   async findVideoById(videoId: string): Promise<VideoModel> {

@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { VideoModule } from './application/video.module';
 import { UserModule } from './application/user.module';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { SqsModule } from '@ssut/nestjs-sqs';
 
 @Module({
   imports: [
@@ -21,6 +22,16 @@ import { MailerModule } from '@nestjs-modules/mailer';
       defaults: {
         from: process.env.EMAIL_FROM,
       },
+    }),
+    SqsModule.register({
+      consumers: [],
+      producers: [
+        {
+          name: process.env.QUEUE_NAME,
+          queueUrl: process.env.QUEUE_URL,
+          region: process.env.AWS_REGION,
+        },
+      ],
     }),
   ],
   controllers: [],

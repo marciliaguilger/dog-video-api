@@ -50,10 +50,7 @@ export class VideoUseCase implements IVideoUseCase {
     const messagePayload = { videoId, userId, videoPath };
 
     try {
-      await this.videoRepository.publishEvent(
-        'your-queue-url',
-        JSON.stringify(messagePayload),
-      );
+      await this.videoRepository.publishEvent(JSON.stringify(messagePayload));
     } catch (error) {
       console.error('Error publishing SQS event:', error);
       throw new Error('Failed to publish video processing event.');

@@ -10,6 +10,8 @@ import { UserRepository } from 'src/infrastucture/data/repositories/user.reposit
 import { IUserRepository } from 'src/domain/repositories/user/user-repository.interface';
 import { S3Repository } from 'src/infrastucture/data/repositories/s3.repository';
 import { IS3Repository } from 'src/infrastucture/data/repositories/s3-repository.interface';
+import { MessageProducerRepository } from 'src/infrastucture/data/repositories/sqs.repository';
+import { IMessageProducerRepository } from 'src/infrastucture/data/repositories/sqs.repository.interface';
 
 @Module({
   imports: [],
@@ -40,6 +42,11 @@ import { IS3Repository } from 'src/infrastucture/data/repositories/s3-repository
     {
       provide: IS3Repository,
       useClass: S3Repository,
+    },
+    MessageProducerRepository,
+    {
+      provide: IMessageProducerRepository,
+      useClass: MessageProducerRepository,
     },
   ],
 })

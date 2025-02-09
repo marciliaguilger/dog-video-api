@@ -6,7 +6,7 @@ export interface IVideoRepository {
   uploadOnS3(uploadVideo: UploadVideo);
   downloadFromS3(key: string): Promise<Buffer>;
   createVideo(video: Video);
-  publishEvent(queueUrl: string, message: string);
+  publishEvent(message: string);
   updateStatus(id: string, status: string, path?: string);
   findVideoById(videoId: string): Promise<VideoModel>;
   findVideosByUserId(userId: string): Promise<VideoModel[]>;
