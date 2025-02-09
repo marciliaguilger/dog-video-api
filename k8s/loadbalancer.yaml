@@ -5,7 +5,7 @@ metadata:
   namespace: default
 spec:
   selector:
-    app: dog-video
+    app: dog-video-api
   ports:
     - protocol: TCP
       port: 80
