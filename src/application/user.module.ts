@@ -4,8 +4,8 @@ import { UserUseCase } from 'src/domain/use-cases/user/user-use-case.service';
 import { UserController } from './controller/user.controller';
 import { IUserRepository } from 'src/domain/repositories/user/user-repository.interface';
 import { UserRepository } from 'src/infrastucture/data/repositories/user.repository';
-import { DynamoDbRepository } from 'src/infrastucture/data/repositories/dynamodb.repository';
-import { IDynamoDbRepository } from 'src/infrastucture/data/repositories/dynamodb-repository.interface';
+import { IDynamoDbUsersRepository } from 'src/infrastucture/data/repositories/dynamodb-users-repository.interface';
+import { DynamoDbUsersRepository } from 'src/infrastucture/data/repositories/dynamodb-users.repository';
 
 @Module({
   imports: [],
@@ -21,11 +21,10 @@ import { IDynamoDbRepository } from 'src/infrastucture/data/repositories/dynamod
       provide: IUserRepository,
       useClass: UserRepository,
     },
-    DynamoDbRepository,
+    DynamoDbUsersRepository,
     {
-      provide: IDynamoDbRepository,
-      useFactory: () => new DynamoDbRepository('users'),
-      useClass: DynamoDbRepository,
+      provide: IDynamoDbUsersRepository,
+      useClass: DynamoDbUsersRepository,
     },
   ],
 })

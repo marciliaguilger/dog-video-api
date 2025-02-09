@@ -1,15 +1,15 @@
 import { Inject } from '@nestjs/common';
 import { IUserRepository } from 'src/domain/repositories/user/user-repository.interface';
-import { IDynamoDbRepository } from './dynamodb-repository.interface';
 import { User } from 'src/domain/entities/user/user.entity';
 import DynamoDB from 'aws-sdk/clients/dynamodb';
 import { Item } from 'aws-sdk/clients/simpledb';
 import { UserModel } from '../models/user-item.interface';
+import { IDynamoDbUsersRepository } from './dynamodb-users-repository.interface';
 
 export class UserRepository implements IUserRepository {
   constructor(
-    @Inject(IDynamoDbRepository)
-    private readonly db: IDynamoDbRepository,
+    @Inject(IDynamoDbUsersRepository)
+    private readonly db: IDynamoDbUsersRepository,
   ) {}
 
   async createUser(user: User) {

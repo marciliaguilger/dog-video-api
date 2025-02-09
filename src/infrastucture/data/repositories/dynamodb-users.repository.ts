@@ -1,5 +1,5 @@
 import { Item } from 'aws-sdk/clients/simpledb';
-import { IDynamoDbRepository } from './dynamodb-repository.interface';
+import { IDynamoDbUsersRepository } from './dynamodb-users-repository.interface';
 import { PutItemInputAttributeMap } from 'aws-sdk/clients/dynamodb';
 import {
   AttributeValue,
@@ -16,12 +16,11 @@ import {
 import { UserModel } from '../models/user-item.interface';
 import { VideoModel } from '../models/video.interface';
 
-export class DynamoDbRepository implements IDynamoDbRepository {
-  private readonly tableName: string;
+export class DynamoDbUsersRepository implements IDynamoDbUsersRepository {
+  private readonly tableName: 'users';
   private readonly dynamoDb: DynamoDBDocumentClient;
 
-  constructor(tableName: string) {
-    this.tableName = tableName;
+  constructor() {
     console.log('Initializing DynamoDB configuration with IRSA');
 
     console.log('Configured region:', process.env.AWS_REGION);
@@ -39,7 +38,7 @@ export class DynamoDbRepository implements IDynamoDbRepository {
 
   async testConnection() {
     const params = {
-      TableName: this.tableName,
+      TableName: 'users',
     };
 
     try {

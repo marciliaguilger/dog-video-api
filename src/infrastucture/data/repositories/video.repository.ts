@@ -1,6 +1,5 @@
 import { Inject } from '@nestjs/common';
 import { IVideoRepository } from 'src/domain/repositories/video/video-repository.interface';
-import { IDynamoDbRepository } from './dynamodb-repository.interface';
 import { UploadVideo } from 'src/domain/entities/video/upload-video.entity';
 import { Video } from 'src/domain/entities/video/video.entity';
 import { DynamoDB } from 'aws-sdk';
@@ -8,11 +7,12 @@ import { Item } from 'aws-sdk/clients/simpledb';
 import { VideoModel } from '../models/video.interface';
 import { IS3Repository } from './s3-repository.interface';
 import { IMessageProducerRepository } from './sqs.repository.interface';
+import { IDynamoDbVideosRepository } from './dynamodb-videos-repository.interface';
 
 export class VideoRepository implements IVideoRepository {
   constructor(
-    @Inject(IDynamoDbRepository)
-    private readonly db: IDynamoDbRepository,
+    @Inject(IDynamoDbVideosRepository)
+    private readonly db: IDynamoDbVideosRepository,
     @Inject(IS3Repository)
     private readonly s3: IS3Repository,
     @Inject(IMessageProducerRepository)
