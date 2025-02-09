@@ -12,7 +12,7 @@ import { randomUUID } from 'crypto';
 import { IUserUseCase } from 'src/domain/use-cases/user/user-use-case.interface';
 
 @ApiTags('User')
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(
     @Inject(IUserUseCase)

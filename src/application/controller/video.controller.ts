@@ -19,14 +19,14 @@ import { IVideoUseCase } from 'src/domain/use-cases/video/video-use-case.interfa
 import { Readable } from 'stream';
 
 @ApiTags('Video')
-@Controller('video')
+@Controller('videos')
 export class VideoController {
   constructor(
     @Inject(IVideoUseCase)
     private readonly videoUseCase: IVideoUseCase,
   ) {}
 
-  @Post('upload')
+  @Post()
   @HttpCode(HttpStatus.OK)
   @UseInterceptors(FileInterceptor('file'))
   async uploadVideo(
