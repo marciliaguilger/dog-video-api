@@ -37,7 +37,7 @@ export class VideoUseCase implements IVideoUseCase {
       id: videoId,
       userId,
       status: 'CREATED',
-      videoPathToBucket: videoPath,
+      videoPath: videoPath,
     };
 
     try {

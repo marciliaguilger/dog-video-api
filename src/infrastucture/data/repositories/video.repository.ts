@@ -68,21 +68,21 @@ export class VideoRepository implements IVideoRepository {
     video: Video,
   ): DynamoDB.DocumentClient.PutItemInputAttributeMap => {
     return {
-      id: video.id,
+      videoId: video.id,
       userId: video.userId,
       status: video.status,
-      videoPathToBucket: video.videoPathToBucket,
-      slicedVideoPathToBucket: video.slicedVideoPathToBucket,
+      videoPath: video.videoPath,
+      framePath: video.framePath,
     };
   };
 
   convertDynamoItemToModel = (dynamoItem: Item): VideoModel => {
     return {
-      id: dynamoItem.Attributes['id'],
+      id: dynamoItem.Attributes['videoId'],
       userId: dynamoItem.Attributes['userId'],
       status: dynamoItem.Attributes['status'],
-      videoPathToBucket: dynamoItem.Attributes['videoPathToBucket'],
-      slicedVideoPathToBucket: dynamoItem.Attributes['slicedVideoPathToBucket'],
+      videoPath: dynamoItem.Attributes['videoPath'],
+      framePath: dynamoItem.Attributes['framePath'],
     };
   };
 }

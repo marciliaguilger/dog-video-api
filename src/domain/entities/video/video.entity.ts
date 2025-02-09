@@ -1,9 +1,7 @@
-import { UUID } from 'crypto';
-
 export class Video {
-  public id: UUID;
+  public id: string;
   public userId: string;
   public status: string;
-  public videoPathToBucket: string;
-  public slicedVideoPathToBucket?: string;
+  public videoPath: string;
+  public framePath?: string;
 }

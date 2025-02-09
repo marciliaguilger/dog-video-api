@@ -147,7 +147,7 @@ function convertToVideoItem(
     id: record.id.S!,
     userId: record.userId.S!,
     status: record.status.S!,
-    videoPathToBucket: record.videoPathToBucket.S!,
-    slicedVideoPathToBucket: record.slicedVideoPathToBucket.S!,
+    videoPath: record.videoPath.S!,
+    framePath: record.framePath.S!,
   };
 }

@@ -37,7 +37,7 @@ const convertUserEntityToDynamoItem = (
   user: User,
 ): DynamoDB.DocumentClient.PutItemInputAttributeMap => {
   return {
-    id: user.id,
+    userId: user.id,
     email: user.email,
     password: user.password,
   };
@@ -45,7 +45,7 @@ const convertUserEntityToDynamoItem = (
 
 const convertDynamoItemToModel = (dynamoItem: Item): UserModel => {
   return {
-    id: dynamoItem.Attributes['id'],
+    id: dynamoItem.Attributes['userId'],
     email: dynamoItem.Attributes['email'],
     password: dynamoItem.Attributes['password'],
   };
