@@ -105,7 +105,7 @@ export class DynamoDbUsersRepository implements IDynamoDbUsersRepository {
     }
   }
 
-  async update(id: string, updates: { [key: string]: any }): Promise<void> {
+  async update(userId: string, updates: { [key: string]: any }): Promise<void> {
     const expressionAttributes: { [key: string]: any } = {};
     const updateExpressions: string[] = [];
 
@@ -122,7 +122,7 @@ export class DynamoDbUsersRepository implements IDynamoDbUsersRepository {
 
     const command = new UpdateCommand({
       TableName: this.tableName,
-      Key: { id },
+      Key: { userId },
       UpdateExpression: updateExpression,
       ExpressionAttributeNames: expressionAttributes,
       ExpressionAttributeValues: expressionAttributes,
@@ -134,7 +134,7 @@ export class DynamoDbUsersRepository implements IDynamoDbUsersRepository {
 
 function convertToUserItem(record: Record<string, AttributeValue>): UserModel {
   return {
-    id: record.id.S!,
+    id: record.userId.S!,
     email: record.email.S!,
     password: record.password.S!,
   };
