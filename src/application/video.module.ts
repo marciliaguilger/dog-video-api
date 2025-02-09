@@ -14,9 +14,35 @@ import { IMessageProducerRepository } from 'src/infrastucture/data/repositories/
 import { IDynamoDbVideosRepository } from 'src/infrastucture/data/repositories/dynamodb-videos-repository.interface';
 import { DynamoDbUsersRepository } from 'src/infrastucture/data/repositories/dynamodb-users.repository';
 import { IDynamoDbUsersRepository } from 'src/infrastucture/data/repositories/dynamodb-users-repository.interface';
+import { SqsModule } from '@ssut/nestjs-sqs';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
-  imports: [],
+  imports: [
+    SqsModule.register({
+      consumers: [],
+      producers: [
+        {
+          name: process.env.QUEUE_NAME,
+          queueUrl: process.env.QUEUE_URL,
+          region: process.env.AWS_REGION,
+        },
+      ],
+    }),
+    MailerModule.forRoot({
+      transport: {
+        host: process.env.EMAIL_HOST,
+        port: parseInt(process.env.EMAIL_PORT, 10),
+        auth: {
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      },
+      defaults: {
+        from: process.env.EMAIL_FROM,
+      },
+    }),
+  ],
   controllers: [VideoController],
   providers: [
     VideoUseCase,

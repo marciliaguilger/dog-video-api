@@ -8,7 +8,8 @@ export class MessageProducerRepository {
     try {
       await this.sqsService.send(process.env.QUEUE_NAME, message);
     } catch (error) {
-      console.log('error in producing message!', error);
+      console.error('Error in producing message!', error);
+      console.error('SqsService:', this.sqsService);
     }
   }
 }

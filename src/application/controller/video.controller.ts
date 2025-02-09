@@ -34,7 +34,7 @@ export class VideoController {
     @UploadedFile() file: Express.Multer.File,
   ) {
     if (!userId || !file) {
-      throw new Error('user_id and video file are required.');
+      throw new Error('userId and video file are required.');
     }
 
     const result = await this.videoUseCase.processVideo(userId, file);

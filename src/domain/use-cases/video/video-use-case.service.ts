@@ -21,6 +21,7 @@ export class VideoUseCase implements IVideoUseCase {
   async processVideo(userId: string, video: Express.Multer.File) {
     const videoId = randomUUID();
     const videoPath = `videos/${videoId}/${video.originalname}`;
+    console.log('videoPath on service: ', videoPath);
 
     const uploadData: UploadVideo = {
       path: videoPath,
