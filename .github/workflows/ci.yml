@@ -3,7 +3,7 @@ on:
     branches: 
       - '**'
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   build:
@@ -34,7 +34,7 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
     environment: production
 
     steps:
@@ -66,10 +66,14 @@ jobs:
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-    - name: Replace AWS Account ID in deployment.yaml
-      if: success()
+
+    - name: Replace Env Variables in deployment.yaml
+      if: ${{ success() }}
       run: |
         sed -i 's/<AWS_ACCOUNT_ID>/${{ secrets.AWS_ACCOUNT_ID }}/g' ./k8s/deployment.yaml
+        sed -i 's/<EMAIL_USERNAME>/${{ secrets.EMAIL_USERNAME }}/g' ./k8s/deployment.yaml
+        sed -i 's/<EMAIL_PASSWORD>/${{ secrets.EMAIL_PASSWORD }}/g' ./k8s/deployment.yaml
+        sed -i 's|<QUEUE_URL>|${{ secrets.QUEUE_URL }}|g' ./k8s/deployment.yaml
 
     - name: Apply Kubernetes manifests
       if: success()
