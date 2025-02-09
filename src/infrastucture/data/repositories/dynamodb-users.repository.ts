@@ -134,7 +134,7 @@ export class DynamoDbUsersRepository implements IDynamoDbUsersRepository {
 
 function convertToUserItem(record: Record<string, AttributeValue>): UserModel {
   return {
-    id: record.userId.S!,
+    userId: record.userId.S!,
     email: record.email.S!,
     password: record.password.S!,
   };

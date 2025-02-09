@@ -23,10 +23,7 @@ export class UserRepository implements IUserRepository {
   }
 
   async findByEmail(email: string): Promise<UserModel> {
-    const item = await this.db.findByEmail(email);
-    console.log('ITEM')
-    console.log(item)
-    return convertDynamoItemToModel(item);
+    return await this.db.findByEmail(email);
   }
 
   async findById(id: string): Promise<UserModel> {
@@ -47,7 +44,7 @@ const convertUserEntityToDynamoItem = (
 
 const convertDynamoItemToModel = (dynamoItem: Item): UserModel => {
   return {
-    id: dynamoItem.Attributes['userId'],
+    userId: dynamoItem.Attributes['userId'],
     email: dynamoItem.Attributes['email'],
     password: dynamoItem.Attributes['password'],
   };

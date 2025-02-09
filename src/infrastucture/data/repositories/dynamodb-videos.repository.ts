@@ -133,7 +133,7 @@ export class DynamoDbVideosRepository implements IDynamoDbVideosRepository {
 
 function convertToUserItem(record: Record<string, AttributeValue>): UserModel {
   return {
-    id: record.id.S!,
+    userId: record.userId.S!,
     email: record.email.S!,
     password: record.password.S!,
   };
