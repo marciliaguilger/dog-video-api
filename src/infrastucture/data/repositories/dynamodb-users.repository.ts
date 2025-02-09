@@ -57,7 +57,7 @@ export class DynamoDbUsersRepository implements IDynamoDbUsersRepository {
       TableName: this.tableName,
       Item: item,
     });
-    console.log('table name:'+ this.tableName)
+    console.log('table name:' + this.tableName);
     await this.dynamoDb.send(command);
   }
 
