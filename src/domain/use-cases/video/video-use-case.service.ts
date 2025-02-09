@@ -6,6 +6,7 @@ import { UploadVideo } from 'src/domain/entities/video/upload-video.entity';
 import { Video } from 'src/domain/entities/video/video.entity';
 import { IUserRepository } from 'src/domain/repositories/user/user-repository.interface';
 import { MailerService } from '@nestjs-modules/mailer';
+import { Message } from 'src/domain/entities/video/message.entity';
 
 @Injectable()
 export class VideoUseCase implements IVideoUseCase {
@@ -19,7 +20,7 @@ export class VideoUseCase implements IVideoUseCase {
 
   async processVideo(userId: string, video: Express.Multer.File) {
     const videoId = randomUUID();
-    const videoPath = `videos/${videoId}`;
+    const videoPath = `videos/${videoId}/${video.originalname}`;
 
     const uploadData: UploadVideo = {
       path: videoPath,
@@ -47,7 +48,10 @@ export class VideoUseCase implements IVideoUseCase {
       throw new Error('Failed to save video metadata. Please try again.');
     }
 
-    const messagePayload = { videoId, userId, videoPath };
+    const messagePayload: Message = {
+      fileId: videoId,
+      sourceBucketName: videoPath,
+    };
 
     try {
       await this.videoRepository.publishEvent(JSON.stringify(messagePayload));
