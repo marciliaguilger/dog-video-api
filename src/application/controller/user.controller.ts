@@ -1,4 +1,10 @@
-import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  ForbiddenException,
+  Inject,
+  Post,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { UserInput } from '../dtos/input/user.input';
 import { User } from 'src/domain/entities/user/user.entity';
@@ -26,10 +32,15 @@ export class UserController {
     };
   }
 
-  @Post()
+  @Post('validate')
   async validateUser(@Body() userInput: UserInput) {
-    console.log('Validando usuário');
+    console.log('Validating user');
+    const result = await this.userUsecase.getUser(userInput);
 
-    return await this.userUsecase.getUser(userInput);
+    if (!result) {
+      throw new ForbiddenException('Invalid user credentials');
+    }
+
+    return { id: result };
   }
 }
