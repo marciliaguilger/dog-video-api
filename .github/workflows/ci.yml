@@ -66,8 +66,9 @@ jobs:
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-    - name: Replace AWS Account ID in deployment.yaml
-      if: success()
+
+    - name: Replace Env Variables in deployment.yaml
+      if: ${{ success() }}
       run: |
         sed -i 's/<AWS_ACCOUNT_ID>/${{ secrets.AWS_ACCOUNT_ID }}/g' ./k8s/deployment.yaml
         sed -i 's/<EMAIL_USERNAME>/${{ secrets.EMAIL_USERNAME }}/g' ./k8s/deployment.yaml
