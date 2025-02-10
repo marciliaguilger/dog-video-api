@@ -7,6 +7,7 @@ import { Video } from 'src/domain/entities/video/video.entity';
 import { IUserRepository } from 'src/domain/repositories/user/user-repository.interface';
 import { MailerService } from '@nestjs-modules/mailer';
 import { Message } from 'src/domain/entities/video/message.entity';
+import { VideoModel } from 'src/infrastucture/data/models/video.interface';
 
 @Injectable()
 export class VideoUseCase implements IVideoUseCase {
@@ -108,7 +109,7 @@ export class VideoUseCase implements IVideoUseCase {
   }
 
   async downloadVideo(videoId: string) {
-    let video;
+    let video: VideoModel;
 
     try {
       video = await this.videoRepository.findVideoById(videoId);
@@ -122,12 +123,12 @@ export class VideoUseCase implements IVideoUseCase {
     }
 
     try {
-      if (!video.slicedVideoPathToBucket) {
+      if (!video.framePath) {
         throw new Error('Video path is missing in the metadata.');
       }
 
       const fileContent = await this.videoRepository.downloadFromS3(
-        video.slicedVideoPathToBucket,
+        video.framePath,
       );
       console.log('File downloaded successfully.');
       return fileContent;
