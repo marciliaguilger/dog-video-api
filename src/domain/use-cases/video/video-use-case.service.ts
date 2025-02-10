@@ -97,8 +97,6 @@ export class VideoUseCase implements IVideoUseCase {
           subject: 'Video Processing Error',
           html: emailContent,
         });
-
-        console.log(`Error email sent to ${user.email}`);
       }
 
       console.log('Updated successfully.');
