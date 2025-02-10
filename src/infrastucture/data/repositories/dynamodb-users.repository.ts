@@ -61,13 +61,20 @@ export class DynamoDbUsersRepository implements IDynamoDbUsersRepository {
     await this.dynamoDb.send(command);
   }
 
-  async read(userId: string): Promise<Item | null> {
-    const command = new GetCommand({
+  async read(userId: string): Promise<UserModel | null> {
+    const params = {
       TableName: this.tableName,
-      Key: { userId },
-    });
-    const result = await this.dynamoDb.send(command);
-    return (result.Item as Item) || null;
+      Key: { userId: { S: userId } },
+    };
+
+    try {
+      const result = await this.dynamoDb.send(new GetCommand(params));
+      console.log('read user: ', result);
+      return result.Item ? convertToUserItem(result.Item) : null;
+    } catch (error) {
+      console.error('Error fetching video:', error);
+      throw error;
+    }
   }
 
   async findByEmail(email: string): Promise<UserModel | null> {

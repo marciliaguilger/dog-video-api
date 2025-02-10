@@ -51,8 +51,7 @@ export class VideoRepository implements IVideoRepository {
   }
 
   async findVideoById(videoId: string): Promise<VideoModel> {
-    const item = await this.db.read(videoId);
-    return this.convertDynamoItemToModel(item);
+    return await this.db.read(videoId);
   }
 
   async findVideosByUserId(userId: string): Promise<VideoModel[]> {

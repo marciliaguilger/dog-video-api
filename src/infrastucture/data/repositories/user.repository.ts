@@ -27,8 +27,7 @@ export class UserRepository implements IUserRepository {
   }
 
   async findById(id: string): Promise<UserModel> {
-    const item = await this.db.read(id);
-    return convertDynamoItemToModel(item);
+    return await this.db.read(id);
   }
 }
 
