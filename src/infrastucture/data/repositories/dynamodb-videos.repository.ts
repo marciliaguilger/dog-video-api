@@ -3,7 +3,6 @@ import { PutItemInputAttributeMap } from 'aws-sdk/clients/dynamodb';
 import {
   AttributeValue,
   DynamoDBClient,
-  QueryCommand,
   ScanCommand,
 } from '@aws-sdk/client-dynamodb';
 import {
@@ -96,7 +95,7 @@ export class DynamoDbVideosRepository implements IDynamoDbVideosRepository {
     };
 
     try {
-      const result = await this.dynamoDb.send(new QueryCommand(params));
+      const result = await this.dynamoDb.send(new ScanCommand(params));
       return result.Items ? result.Items.map(convertToVideoItem) : [];
     } catch (error) {
       console.error('Error fetching videos for user:', error);
