@@ -7,7 +7,6 @@ import { Video } from 'src/domain/entities/video/video.entity';
 import { IUserRepository } from 'src/domain/repositories/user/user-repository.interface';
 import { MailerService } from '@nestjs-modules/mailer';
 import { Message } from 'src/domain/entities/video/message.entity';
-import { env } from 'process';
 
 @Injectable()
 export class VideoUseCase implements IVideoUseCase {

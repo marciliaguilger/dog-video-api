@@ -105,15 +105,16 @@ export class DynamoDbVideosRepository implements IDynamoDbVideosRepository {
   }
 
   async update(id: string, updates: { [key: string]: any }): Promise<void> {
-    const expressionAttributes: { [key: string]: any } = {};
+    const expressionAttributeNames: { [key: string]: string } = {};
+    const expressionAttributeValues: { [key: string]: any } = {};
     const updateExpressions: string[] = [];
 
     for (const key in updates) {
       const attributeKey = `#${key}`;
       const valueKey = `:${key}`;
 
-      expressionAttributes[attributeKey] = key;
-      expressionAttributes[valueKey] = updates[key];
+      expressionAttributeNames[attributeKey] = key;
+      expressionAttributeValues[valueKey] = updates[key];
       updateExpressions.push(`${attributeKey} = ${valueKey}`);
     }
 
@@ -123,8 +124,8 @@ export class DynamoDbVideosRepository implements IDynamoDbVideosRepository {
       TableName: this.tableName,
       Key: { id },
       UpdateExpression: updateExpression,
-      ExpressionAttributeNames: expressionAttributes,
-      ExpressionAttributeValues: expressionAttributes,
+      ExpressionAttributeNames: expressionAttributeNames,
+      ExpressionAttributeValues: expressionAttributeValues,
     });
 
     await this.dynamoDb.send(command);
