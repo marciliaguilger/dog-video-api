@@ -1,4 +1,3 @@
-import { Item } from 'aws-sdk/clients/simpledb';
 import { PutItemInputAttributeMap } from 'aws-sdk/clients/dynamodb';
 import {
   AttributeValue,
@@ -59,15 +58,6 @@ export class DynamoDbVideosRepository implements IDynamoDbVideosRepository {
     await this.dynamoDb.send(command);
   }
 
-  async read(videoId: string): Promise<Item | null> {
-    const command = new GetCommand({
-      TableName: this.tableName,
-      Key: { videoId },
-    });
-    const result = await this.dynamoDb.send(command);
-    return (result.Item as Item) || null;
-  }
-
   async findByEmail(email: string): Promise<UserModel | null> {
     const params = {
       TableName: this.tableName,
@@ -99,6 +89,22 @@ export class DynamoDbVideosRepository implements IDynamoDbVideosRepository {
       return result.Items ? result.Items.map(convertToVideoItem) : [];
     } catch (error) {
       console.error('Error fetching videos for user:', error);
+      throw error;
+    }
+  }
+
+  async read(videoId: string): Promise<VideoModel | null> {
+    const params = {
+      TableName: this.tableName,
+      Key: { videoId: { S: videoId } },
+    };
+
+    try {
+      const result = await this.dynamoDb.send(new GetCommand(params));
+      console.log('read video: ', result);
+      return result.Item ? convertToVideoItem(result.Item) : null;
+    } catch (error) {
+      console.error('Error fetching video:', error);
       throw error;
     }
   }
