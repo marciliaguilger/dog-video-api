@@ -15,7 +15,11 @@ export class MessageProducerRepository {
   }
 
   async sendMessage(body: string) {
-    const message: any = JSON.stringify(body);
+    const message = {
+      id: `${Date.now()}`, // Exemplo de ID único para a mensagem
+      body: body, // A propriedade body deve conter o conteúdo da mensagem
+    };
+
     try {
       await this.sqsService.send(process.env.QUEUE_NAME, message);
     } catch (error) {
