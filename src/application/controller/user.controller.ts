@@ -10,6 +10,7 @@ import { UserInput } from '../dtos/input/user.input';
 import { User } from 'src/domain/entities/user/user.entity';
 import { randomUUID } from 'crypto';
 import { IUserUseCase } from 'src/domain/use-cases/user/user-use-case.interface';
+import { AuthService } from 'src/domain/use-cases/auth/auth.service';
 
 @ApiTags('User')
 @Controller('users')
@@ -17,6 +18,7 @@ export class UserController {
   constructor(
     @Inject(IUserUseCase)
     private readonly userUsecase: IUserUseCase,
+    private readonly authService: AuthService
   ) {}
 
   @Post()
@@ -32,7 +34,7 @@ export class UserController {
     };
   }
 
-  @Post('validate')
+  @Post('login')
   async validateUser(@Body() userInput: UserInput) {
     console.log('Validating user');
     const result = await this.userUsecase.getUser(userInput);
@@ -41,6 +43,7 @@ export class UserController {
       throw new ForbiddenException('Invalid user credentials');
     }
 
-    return { id: result };
+    const token = await this.authService.generateJwtToken(result);
+    return { accessToken: token };
   }
 }
