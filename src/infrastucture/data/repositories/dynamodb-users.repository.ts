@@ -61,10 +61,10 @@ export class DynamoDbUsersRepository implements IDynamoDbUsersRepository {
     await this.dynamoDb.send(command);
   }
 
-  async read(id: string): Promise<Item | null> {
+  async read(userId: string): Promise<Item | null> {
     const command = new GetCommand({
       TableName: this.tableName,
-      Key: { id },
+      Key: { userId },
     });
     const result = await this.dynamoDb.send(command);
     return (result.Item as Item) || null;
@@ -144,7 +144,7 @@ function convertToVideoItem(
   record: Record<string, AttributeValue>,
 ): VideoModel {
   return {
-    id: record.id.S!,
+    id: record.videoId.S!,
     userId: record.userId.S!,
     status: record.status.S!,
     videoPath: record.videoPath.S!,

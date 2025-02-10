@@ -60,10 +60,10 @@ export class DynamoDbVideosRepository implements IDynamoDbVideosRepository {
     await this.dynamoDb.send(command);
   }
 
-  async read(id: string): Promise<Item | null> {
+  async read(videoId: string): Promise<Item | null> {
     const command = new GetCommand({
       TableName: this.tableName,
-      Key: { id },
+      Key: { videoId },
     });
     const result = await this.dynamoDb.send(command);
     return (result.Item as Item) || null;
@@ -91,7 +91,7 @@ export class DynamoDbVideosRepository implements IDynamoDbVideosRepository {
   async findVideosByUserId(userId: string): Promise<VideoModel[]> {
     const params = {
       TableName: this.tableName,
-      KeyConditionExpression: 'userId = :userId',
+      FilterExpression: 'userId = :userId',
       ExpressionAttributeValues: { ':userId': { S: userId } },
     };
 
@@ -159,10 +159,10 @@ function convertToVideoItem(
   record: Record<string, AttributeValue>,
 ): VideoModel {
   return {
-    id: record.id.S!,
+    id: record.videoId.S!,
     userId: record.userId.S!,
     status: record.status.S!,
-    videoPath: record.videoPathToBucket.S!,
-    framePath: record.slicedVideoPathToBucket.S!,
+    videoPath: record.videoPath.S!,
+    framePath: record.framePath.S!,
   };
 }
