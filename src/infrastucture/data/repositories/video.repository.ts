@@ -39,13 +39,8 @@ export class VideoRepository implements IVideoRepository {
     }
   }
   async updateStatus(id: string, status: string, path?: string): Promise<void> {
-    const updates: { [key: string]: any } = { status };
-    if (path) {
-      updates.slicedVideoPathToBucket = path;
-    }
-
     try {
-      await this.db.update(id, updates);
+      await this.db.updateVideoStatusAndPath(id, status, path);
     } catch (error) {
       console.error('Error updating video status:', error);
       throw error;

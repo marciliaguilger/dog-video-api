@@ -104,7 +104,16 @@ export class DynamoDbVideosRepository implements IDynamoDbVideosRepository {
     }
   }
 
-  async update(id: string, updates: { [key: string]: any }): Promise<void> {
+  async updateVideoStatusAndPath(
+    videoId: string,
+    status: string,
+    framePath?: string,
+  ): Promise<void> {
+    const updates: { [key: string]: any } = { status };
+    if (framePath) {
+      updates.framePath = framePath;
+    }
+
     const expressionAttributeNames: { [key: string]: string } = {};
     const expressionAttributeValues: { [key: string]: any } = {};
     const updateExpressions: string[] = [];
@@ -122,13 +131,19 @@ export class DynamoDbVideosRepository implements IDynamoDbVideosRepository {
 
     const command = new UpdateCommand({
       TableName: this.tableName,
-      Key: { id },
+      Key: { videoId },
       UpdateExpression: updateExpression,
       ExpressionAttributeNames: expressionAttributeNames,
       ExpressionAttributeValues: expressionAttributeValues,
     });
 
-    await this.dynamoDb.send(command);
+    try {
+      await this.dynamoDb.send(command);
+      console.log('Video status and framePath updated successfully');
+    } catch (error) {
+      console.error('Error updating video status and path:', error);
+      throw error;
+    }
   }
 }
 
