@@ -1,9 +1,11 @@
+import { Injectable } from '@nestjs/common';
 import { SqsService } from '@ssut/nestjs-sqs';
-import AWS from 'aws-sdk';
+import * as AWS from 'aws-sdk';
 
+@Injectable()
 export class MessageProducerRepository {
   private readonly sqs: AWS.SQS;
-  
+
   constructor(private readonly sqsService: SqsService) {
     this.sqs = new AWS.SQS({
       accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -11,7 +13,7 @@ export class MessageProducerRepository {
       region: process.env.AWS_REGION,
     });
   }
-  
+
   async sendMessage(body: string) {
     const message: any = JSON.stringify(body);
     try {

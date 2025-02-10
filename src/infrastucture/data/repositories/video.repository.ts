@@ -52,7 +52,7 @@ export class VideoRepository implements IVideoRepository {
     }
   }
   async publishEvent(message: string) {
-    await this.sqs.send(message);
+    await this.sqs.sendMessage(message);
   }
 
   async findVideoById(videoId: string): Promise<VideoModel> {
