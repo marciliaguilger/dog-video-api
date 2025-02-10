@@ -11,10 +11,12 @@ import {
   Post,
   StreamableFile,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/domain/use-cases/auth/jwt-auth.guard';
 import { IVideoUseCase } from 'src/domain/use-cases/video/video-use-case.interface';
 import { Readable } from 'stream';
 
@@ -55,7 +57,8 @@ export class VideoController {
     await this.videoUseCase.updateStatus(videoId, status, path);
     return { message: 'Video status updated successfully', videoId };
   }
-
+  
+  
   @Get(':videoId/download')
   @HttpCode(HttpStatus.OK)
   @Header('Content-Type', 'application/zip')
@@ -71,6 +74,7 @@ export class VideoController {
     return new StreamableFile(stream);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('user/:userId')
   @HttpCode(HttpStatus.OK)
   async getVideosByUser(@Param('userId') userId: string) {

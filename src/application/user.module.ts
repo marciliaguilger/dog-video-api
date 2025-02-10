@@ -6,9 +6,12 @@ import { IUserRepository } from 'src/domain/repositories/user/user-repository.in
 import { UserRepository } from 'src/infrastucture/data/repositories/user.repository';
 import { IDynamoDbUsersRepository } from 'src/infrastucture/data/repositories/dynamodb-users-repository.interface';
 import { DynamoDbUsersRepository } from 'src/infrastucture/data/repositories/dynamodb-users.repository';
+import { AuthModule } from './auth.module';
 
 @Module({
-  imports: [],
+  imports: [
+    AuthModule
+  ],
   controllers: [UserController],
   providers: [
     UserUseCase,
