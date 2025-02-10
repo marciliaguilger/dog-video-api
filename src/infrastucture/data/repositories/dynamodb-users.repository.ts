@@ -8,7 +8,6 @@ import {
 } from '@aws-sdk/client-dynamodb';
 import {
   DynamoDBDocumentClient,
-  GetCommand,
   PutCommand,
   UpdateCommand,
 } from '@aws-sdk/lib-dynamodb';
@@ -63,13 +62,14 @@ export class DynamoDbUsersRepository implements IDynamoDbUsersRepository {
   async read(userId: string): Promise<UserModel | null> {
     const params = {
       TableName: this.tableName,
-      Key: { userId: { S: userId } },
+      FilterExpression: 'userId = :userId',
+      ExpressionAttributeValues: { ':userId': { S: userId } },
     };
 
     try {
-      const result = await this.dynamoDb.send(new GetCommand(params));
+      const result = await this.dynamoDb.send(new ScanCommand(params));
       console.log('read user: ', result);
-      return result.Item ? convertToUserItem(result.Item) : null;
+      return result.Items ? convertToUserItem(result.Items[0]) : null;
     } catch (error) {
       console.error('Error fetching video:', error);
       throw error;
