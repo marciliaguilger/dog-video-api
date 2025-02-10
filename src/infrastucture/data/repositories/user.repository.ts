@@ -2,7 +2,6 @@ import { Inject } from '@nestjs/common';
 import { IUserRepository } from 'src/domain/repositories/user/user-repository.interface';
 import { User } from 'src/domain/entities/user/user.entity';
 import DynamoDB from 'aws-sdk/clients/dynamodb';
-import { Item } from 'aws-sdk/clients/simpledb';
 import { UserModel } from '../models/user-item.interface';
 import { IDynamoDbUsersRepository } from './dynamodb-users-repository.interface';
 
@@ -38,13 +37,5 @@ const convertUserEntityToDynamoItem = (
     userId: user.id,
     email: user.email,
     password: user.password,
-  };
-};
-
-const convertDynamoItemToModel = (dynamoItem: Item): UserModel => {
-  return {
-    userId: dynamoItem.Attributes['userId'],
-    email: dynamoItem.Attributes['email'],
-    password: dynamoItem.Attributes['password'],
   };
 };

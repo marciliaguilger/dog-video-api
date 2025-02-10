@@ -1,4 +1,3 @@
-import { Item } from 'aws-sdk/clients/simpledb';
 import { IDynamoDbUsersRepository } from './dynamodb-users-repository.interface';
 import { PutItemInputAttributeMap } from 'aws-sdk/clients/dynamodb';
 import {

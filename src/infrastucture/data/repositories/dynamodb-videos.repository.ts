@@ -96,13 +96,14 @@ export class DynamoDbVideosRepository implements IDynamoDbVideosRepository {
   async read(videoId: string): Promise<VideoModel | null> {
     const params = {
       TableName: this.tableName,
-      Key: { videoId: { S: videoId } },
+      FilterExpression: 'videoId = :videoId',
+      ExpressionAttributeValues: { ':videoId': { S: videoId } },
     };
 
     try {
-      const result = await this.dynamoDb.send(new GetCommand(params));
+      const result = await this.dynamoDb.send(new ScanCommand(params));
       console.log('read video: ', result);
-      return result.Item ? convertToVideoItem(result.Item) : null;
+      return result.Items ? convertToVideoItem(result.Items[0]) : null;
     } catch (error) {
       console.error('Error fetching video:', error);
       throw error;
