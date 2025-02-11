@@ -108,7 +108,7 @@ export class VideoUseCase implements IVideoUseCase {
     }
   }
 
-  async downloadVideo(videoId: string): Promise<AWS.S3.Body> {
+  async downloadVideo(videoId: string): Promise<AWS.S3.GetObjectOutput> {
     let video: VideoModel;
 
     try {
