@@ -5,10 +5,11 @@ import { AuthService } from 'src/domain/use-cases/auth/auth.service';
 
    @Module({
      imports: [
-       JwtModule.register({
-         secret: 'teste',  // Replace with your secret key
-         signOptions: { expiresIn: '1h' }, // Set token expiration time
-       }),
+      PassportModule.register({ defaultStrategy: 'jwt' }),
+      JwtModule.register({
+        secret: 'teste',  // Replace with your secret key
+        signOptions: { expiresIn: '1h' }, // Set token expiration time
+      }),
        PassportModule,
      ],
      providers: [AuthService],
