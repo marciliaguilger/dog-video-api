@@ -42,7 +42,6 @@ export class VideoController {
     return { message: 'Video uploaded successfully', videoId: result.videoId };
   }
 
-  @UseGuards(JwtAuthGuard)
   @Patch(':videoId/status')
   @HttpCode(HttpStatus.OK)
   async updateStatus(
