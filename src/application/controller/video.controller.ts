@@ -28,6 +28,7 @@ export class VideoController {
     private readonly videoUseCase: IVideoUseCase,
   ) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   @HttpCode(HttpStatus.OK)
   @UseInterceptors(FileInterceptor('file'))
@@ -43,6 +44,7 @@ export class VideoController {
     return { message: 'Video uploaded successfully', videoId: result.videoId };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':videoId/status')
   @HttpCode(HttpStatus.OK)
   async updateStatus(
@@ -58,6 +60,7 @@ export class VideoController {
     return { message: 'Video status updated successfully', videoId };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':videoId/download')
   async downloadVideo(@Param('videoId') videoId: string, @Res() res: Response) {
     try {
