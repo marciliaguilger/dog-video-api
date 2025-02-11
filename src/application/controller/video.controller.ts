@@ -2,14 +2,14 @@ import {
   Body,
   Controller,
   Get,
-  Header,
   HttpCode,
   HttpStatus,
   Inject,
+  NotFoundException,
   Param,
   Patch,
   Post,
-  StreamableFile,
+  Res,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -18,7 +18,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/domain/use-cases/auth/jwt-auth.guard';
 import { IVideoUseCase } from 'src/domain/use-cases/video/video-use-case.interface';
-import { Readable } from 'stream';
+import { Response } from 'express';
 
 @ApiTags('Video')
 @Controller('videos')
@@ -57,21 +57,24 @@ export class VideoController {
     await this.videoUseCase.updateStatus(videoId, status, path);
     return { message: 'Video status updated successfully', videoId };
   }
-  
-  
+
   @Get(':videoId/download')
-  @HttpCode(HttpStatus.OK)
-  @Header('Content-Type', 'application/zip')
-  @Header('Content-Disposition', 'attachment; filename=video.zip')
-  async downloadVideo(@Param('videoId') videoId: string) {
-    const fileContent = await this.videoUseCase.downloadVideo(videoId);
+  async downloadVideo(@Param('videoId') videoId: string, @Res() res: Response) {
+    try {
+      const video = await this.videoUseCase.downloadVideo(videoId);
 
-    if (!fileContent) {
-      throw new Error('Failed to retrieve video file.');
+      if (!video) {
+        throw new NotFoundException('Video not found.');
+      }
+
+      res.set({
+        'Content-Type': video.ContentType,
+        'Content-Disposition': `attachment; filename="${videoId}"`,
+      });
+      res.send(video);
+    } catch (error) {
+      res.status(500).send(`Error in downloading file: ${error}`);
     }
-
-    const stream = Readable.from(fileContent);
-    return new StreamableFile(stream);
   }
 
   @UseGuards(JwtAuthGuard)
