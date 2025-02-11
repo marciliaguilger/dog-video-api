@@ -26,14 +26,15 @@ export class S3Repository implements IS3Repository {
     );
   }
 
-  async downloadFile(key: string): Promise<AWS.S3.GetObjectOutput> {
-    const params: AWS.S3.GetObjectRequest = {
+  async downloadFile(key: string): Promise<string> {
+    const params = {
       Bucket: this.AWS_S3_BUCKET,
       Key: key,
+      Expires: 3600, // 1 hour by default
     };
 
     try {
-      const data = await this.s3.getObject(params).promise();
+      const data = await this.s3.getSignedUrlPromise('getObject', params);
       return data;
     } catch (error) {
       console.error('Error downloading file from S3:', error);
