@@ -10,7 +10,7 @@ import { JwtStrategy } from 'src/domain/use-cases/auth/jwt-strategy.service';
       PassportModule.register({ defaultStrategy: 'jwt' }),
       JwtModule.register({
         secret: 'teste',  // Replace with your secret key
-        signOptions: { expiresIn: '60s' }, // Set token expiration time
+        signOptions: { expiresIn: '600s' }, // Set token expiration time
       }),
        PassportModule,
      ],

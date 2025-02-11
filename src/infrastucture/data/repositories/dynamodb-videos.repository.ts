@@ -168,6 +168,6 @@ function convertToVideoItem(
     userId: record.userId.S!,
     status: record.status.S!,
     videoPath: record.videoPath.S!,
-    framePath: record.framePath.S!,
+    framePath: record.framePath ? record.framePath.S : undefined,
   };
 }
