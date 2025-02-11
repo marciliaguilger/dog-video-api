@@ -21,7 +21,7 @@ export class VideoRepository implements IVideoRepository {
   async uploadOnS3(uploadVideo: UploadVideo) {
     await this.s3.uploadFile(uploadVideo.video, uploadVideo.path);
   }
-  async downloadFromS3(key: string): Promise<AWS.S3.Body> {
+  async downloadFromS3(key: string): Promise<AWS.S3.GetObjectOutput> {
     try {
       return await this.s3.downloadFile(key);
     } catch (error) {

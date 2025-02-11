@@ -68,7 +68,7 @@ export class VideoController {
       }
 
       res.set({
-        //'Content-Type': video.,
+        'Content-Type': video.ContentType,
         'Content-Disposition': `attachment; filename="${videoId}"`,
       });
       res.send(video);
