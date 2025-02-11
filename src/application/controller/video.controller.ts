@@ -9,7 +9,6 @@ import {
   Param,
   Patch,
   Post,
-  Res,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -18,7 +17,6 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/domain/use-cases/auth/jwt-auth.guard';
 import { IVideoUseCase } from 'src/domain/use-cases/video/video-use-case.interface';
-import { Response } from 'express';
 
 @ApiTags('Video')
 @Controller('videos')
@@ -62,7 +60,7 @@ export class VideoController {
 
   @UseGuards(JwtAuthGuard)
   @Get(':videoId/download')
-  async downloadVideo(@Param('videoId') videoId: string, @Res() res: Response) {
+  async downloadVideo(@Param('videoId') videoId: string) {
     try {
       const video = await this.videoUseCase.downloadVideo(videoId);
 
@@ -70,13 +68,9 @@ export class VideoController {
         throw new NotFoundException('Video not found.');
       }
 
-      res.set({
-        'Content-Type': video.ContentType,
-        'Content-Disposition': `attachment; filename="${videoId}"`,
-      });
-      res.send(video);
+      return video;
     } catch (error) {
-      res.status(500).send(`Error in downloading file: ${error}`);
+      console.log(`Error in downloading file: ${error}`);
     }
   }
 
