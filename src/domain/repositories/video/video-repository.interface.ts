@@ -4,7 +4,7 @@ import { VideoModel } from 'src/infrastucture/data/models/video.interface';
 
 export interface IVideoRepository {
   uploadOnS3(uploadVideo: UploadVideo);
-  downloadFromS3(key: string): Promise<Buffer>;
+  downloadFromS3(key: string): Promise<AWS.S3.Body>;
   createVideo(video: Video);
   publishEvent(message: string);
   updateStatus(id: string, status: string, path?: string);
